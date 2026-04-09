@@ -1,0 +1,57 @@
+# Project 1 — Counting Semaphores & Custom Syscalls
+
+## System Calls Implemented
+
+| # | Syscall | Category | Syscall Number |
+|---|---------|----------|----------------|
+| 1 | `semget()` | IPC | 24 |
+| 2 | `semwait()` | IPC | 25 |
+| 3 | `sempost()` | IPC | 26 |
+| 4 | `semclose()` | IPC | 27 |
+
+## Files in This Folder
+
+| File | Purpose |
+|------|---------|
+| `kernel/sem.c` | Core semaphore implementation (blocking/waking logic) |
+| `kernel/sem.h` | Shared semaphore data structures and spinlocks |
+| `user/semtest.c` | User-space demo program — tests synchronization |
+
+## Semaphore API Reference
+
+### 1. `int semget(int key, int initval)`
+Initializes or retrieves a counting semaphore associated with a key. Returns the semaphore ID.
+
+### 2. `int semwait(int id)`
+The **P** (proberen) operation. Decrements the semaphore value. If the value becomes negative, the process blocks until signaled.
+
+### 3. `int sempost(int id)`
+The **V** (verhogen) operation. Increments the semaphore value and wakes up one blocked process.
+
+### 4. `int semclose(int id)`
+Destroys the semaphore and wakes up all waiting processes with an error code.
+
+## Build & Run
+
+```bash
+make qemu
+# Inside xv6 shell:
+$ semtest
+```
+
+Press **Ctrl+A then X** to quit QEMU.
+
+## Expected `semtest` Output
+
+```
+semtest: starting...
+semtest: parent waiting for child...
+semtest: child signaling parent...
+semtest: parent resumed!
+semtest: PASSED
+```
+
+## Design Notes
+
+- **Semaphores**: Implemented using a global `semtable` protected by a spinlock. Individual semaphores also have their own spinlocks to ensure atomicity during sleep/wakeup.
+- **Sleep/Wakeup**: Leverages the kernel's existing `sleep()` and `wakeup()` functions for process synchronization.
