@@ -13,6 +13,7 @@
 
 // Forward declarations for built-in commands
 int cmd_ls(int argc, char *argv[]);
+int cmd_grep(int argc, char *argv[]);
 
 // Built-in command table
 typedef struct {
@@ -23,6 +24,7 @@ typedef struct {
 
 static Command commands[] = {
     { "custom_ls",   cmd_ls,        "List directory contents" },
+    { "custom_grep", cmd_grep,      "Search for a pattern in files" },
     { NULL, NULL, NULL }
 };
 

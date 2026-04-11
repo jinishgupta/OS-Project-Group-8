@@ -11,6 +11,7 @@ Every utility is implemented **from scratch** using only POSIX system calls — 
 src/
   shell.c          Main interactive shell
   custom_ls.c      List directory contents
+  custom_grep.c    Search for patterns in files
 Makefile           Build system
 README.md          This file
 ```
@@ -42,7 +43,8 @@ Binaries are placed in `bin/`.
 
 ### Standalone utilities
 ```bash
-./bin/custom_ls -la 
+./bin/custom_ls -la
+./bin/custom_grep -in "pattern" file.txt
 ```
 
 ## Quick Output Check For ls Command
@@ -57,6 +59,7 @@ drwxrwxr-x   4 user     user        4096 Apr 11 16:09 ..
 ## Command Reference
 
 ### custom_ls — List directory contents
+
 ```
 custom_ls [OPTIONS] [DIR]
   -l    Long format (permissions, owner, size, date)
@@ -64,25 +67,77 @@ custom_ls [OPTIONS] [DIR]
   -h    Human-readable sizes (K, M, G)
 ```
 
-Exit codes:
+### custom_grep — Search for a pattern in files
 
-- `0` on success
-- non-zero on error (for example, invalid option or directory open failure)
+```
+custom_grep [OPTIONS] PATTERN [FILE...]
+  -i    Ignore case (case-insensitive matching)
+  -v    Invert match (show lines NOT matching the pattern)
+  -n    Show line numbers alongside matching lines
+  -c    Only show a count of matching lines, not the lines themselves
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `PATTERN` | The string to search for |
+| `FILE...` | One or more files to search. If omitted, reads from stdin |
+
+**Behavior:**
+
+- When multiple files are provided, each matching line is prefixed with the filename (e.g. `file.txt:line`).
+- Flags can be combined freely (e.g. `-ivn` applies ignore-case, invert, and line numbers together).
+- The `-c` flag suppresses normal output and prints only the match count per file. When combined with multiple files, each file's count is prefixed with its filename.
+- When reading from stdin (no files given), the source is labeled `(stdin)` in multi-file prefix output.
+- Case-insensitive search (`-i`) uses `strcasestr` internally.
+
+**Exit codes:**
+
+| Code | Meaning |
+|------|---------|
+| `0`  | At least one match was found |
+| `1`  | No matches found, or an error occurred (e.g. unknown option, file not found) |
+
+**Examples:**
+
+```bash
+# Basic search
+custom_grep "hello" file.txt
+
+# Case-insensitive search with line numbers
+custom_grep -in "error" app.log
+
+# Show lines that do NOT contain "debug"
+custom_grep -v "debug" app.log
+
+# Count matches across multiple files
+custom_grep -c "TODO" src/*.c
+
+# Search stdin via pipe
+cat file.txt | custom_grep "pattern"
+
+# Combine with input redirection in the shell
+custom_grep "pattern" < input.txt
+```
+
+---
 
 ## Shell Features
 
 | Feature | Example |
 |---------|---------|
-| Run built-in commands | `custom_ls -la` |
+| Run built-in commands | `custom_ls -la` or `custom_grep pattern` |
 | Change directory | `cd /tmp` |
 | Output redirection | `custom_ls > out.txt` |
-| Input redirection | `custom_ls < in.txt` |
-| Pipe | `custom_ls | cat` |
+| Input redirection | `custom_grep pattern < in.txt` |
+| Pipe | `custom_ls | custom_grep pattern` |
 | External commands | `echo hello` |
 | Help | `help` |
 | Exit | `exit` or `quit` |
 
-Notes:
+**Notes:**
 
 - Input redirection is supported by the shell, but `custom_ls` does not normally consume stdin.
 - If multiple directory arguments are passed to `custom_ls`, the last non-option argument is used.
+- `custom_grep` fully supports both input redirection and pipe input from the shell.
