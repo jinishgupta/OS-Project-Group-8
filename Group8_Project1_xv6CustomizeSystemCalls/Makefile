@@ -117,6 +117,11 @@ $U/_forktest: $U/forktest.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_forktest $U/forktest.o $U/ulib.o $U/usys.o
 	$(OBJDUMP) -S $U/_forktest > $U/forktest.asm
 
+$U/_testgetinfo: $U/testgetinfo.o $(ULIB)
+	$(LD) $(LDFLAGS) -T $U/user.ld -o $U/_testgetinfo $U/testgetinfo.o $(ULIB)
+	$(OBJDUMP) -S $U/_testgetinfo > $U/testgetinfo.asm
+	$(OBJDUMP) -t $U/_testgetinfo | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $U/testgetinfo.sym
+
 mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 	gcc -Wno-unknown-attributes -I. -o mkfs/mkfs mkfs/mkfs.c
 
@@ -148,7 +153,9 @@ UPROGS=\
 	$U/_dorphan\
 	$U/_trying\
 	$U/_tryint\
-	$U/_semtest
+	$U/_semtest\
+	$U/_testgetinfo\
+
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
 

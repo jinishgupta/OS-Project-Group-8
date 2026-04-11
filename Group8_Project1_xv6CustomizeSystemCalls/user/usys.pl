@@ -48,3 +48,4 @@ entry("semget");
 entry("semwait");
 entry("sempost");
 entry("semclose");
+entry("getprocinfo");

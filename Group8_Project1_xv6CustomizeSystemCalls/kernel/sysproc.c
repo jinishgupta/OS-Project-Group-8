@@ -154,3 +154,30 @@ sys_semclose(void)
   argint(0, &id);
   return sem_close(id);
 }
+
+struct procinfo {
+    int pid;
+    int ppid;
+    int state;      // 1=SLEEPING, 2=RUNNABLE, 3=RUNNING
+    char name[16];
+};
+
+uint64
+sys_getprocinfo(void)
+{
+    uint64 addr;
+    struct procinfo info;
+    struct proc *p = myproc();
+
+    argaddr(0, &addr);
+
+    info.pid   = p->pid;
+    info.ppid  = p->parent ? p->parent->pid : 0;
+    info.state = p->state;   
+    safestrcpy(info.name, p->name, sizeof(info.name));
+
+    if (copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)
+        return -1;
+    return 0;
+}
+

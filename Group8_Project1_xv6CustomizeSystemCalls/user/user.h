@@ -1,6 +1,12 @@
 #define SBRK_ERROR ((char *)-1)
 
 struct stat;
+struct procinfo {
+    int  pid;
+    int  ppid;
+    int  state;
+    char name[16];
+};
 
 // system calls
 int fork(void);
@@ -30,6 +36,7 @@ int semget(int key, int initval);
 int semwait(int id);
 int sempost(int id);
 int semclose(int id);
+int  getprocinfo(struct procinfo *);
 
 // ulib.c
 int stat(const char*, struct stat*);

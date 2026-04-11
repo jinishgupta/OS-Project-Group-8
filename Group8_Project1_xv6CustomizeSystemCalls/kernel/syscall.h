@@ -26,3 +26,4 @@
 #define SYS_semwait   25
 #define SYS_sempost   26
 #define SYS_semclose  27
+#define SYS_getprocinfo  28
