@@ -80,6 +80,9 @@ usertrap(void)
   if(killed(p))
     kexit(-1);
 
+  // Check for pending signals before returning to user space
+  dispatch_signals(p);
+
   // give up the CPU if this is a timer interrupt.
   if(which_dev == 2)
     yield();

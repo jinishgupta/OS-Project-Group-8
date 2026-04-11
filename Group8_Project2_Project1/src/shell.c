@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +15,7 @@
 // Forward declarations for built-in commands
 int cmd_ls(int argc, char *argv[]);
 int cmd_grep(int argc, char *argv[]);
+int cmd_cat(int argc, char *argv[]);   
 
 // Built-in command table
 typedef struct {
@@ -25,6 +27,7 @@ typedef struct {
 static Command commands[] = {
     { "custom_ls",   cmd_ls,        "List directory contents" },
     { "custom_grep", cmd_grep,      "Search for a pattern in files" },
+    { "custom_cat",  cmd_cat,       "Display file contents" }, 
     { NULL, NULL, NULL }
 };
 
@@ -65,7 +68,7 @@ static int handle_redirection(char *argv[], int *argc_out)
             if (fd < 0) { perror("open"); return -1; }
             dup2(fd, STDOUT_FILENO);
             close(fd);
-            i++;  // skip filename
+            i++;
         } else if (strcmp(argv[i], "<") == 0 && i + 1 < argc) {
             int fd = open(argv[i + 1], O_RDONLY);
             if (fd < 0) { perror("open"); return -1; }
@@ -91,16 +94,18 @@ static void run_pipeline(char *left_cmd, char *right_cmd)
     if (p1 == 0) {
         dup2(pfd[1], STDOUT_FILENO);
         close(pfd[0]); close(pfd[1]);
+
         char *argv[MAX_ARGS];
         int argc = tokenise(left_cmd, argv);
         handle_redirection(argv, &argc);
-        // find and run built-in
+
         for (int i = 0; commands[i].name; i++) {
             if (strcmp(argv[0], commands[i].name) == 0) {
                 exit(commands[i].func(argc, argv));
             }
         }
-        execlp(argv[0], argv[0], NULL);
+
+        execvp(argv[0], argv);
         exit(1);
     }
 
@@ -108,15 +113,18 @@ static void run_pipeline(char *left_cmd, char *right_cmd)
     if (p2 == 0) {
         dup2(pfd[0], STDIN_FILENO);
         close(pfd[0]); close(pfd[1]);
+
         char *argv[MAX_ARGS];
         int argc = tokenise(right_cmd, argv);
         handle_redirection(argv, &argc);
+
         for (int i = 0; commands[i].name; i++) {
             if (strcmp(argv[0], commands[i].name) == 0) {
                 exit(commands[i].func(argc, argv));
             }
         }
-        execlp(argv[0], argv[0], NULL);
+
+        execvp(argv[0], argv);
         exit(1);
     }
 
@@ -131,6 +139,7 @@ static void print_help(void)
     printf("\n  Available built-in commands:\n");
     for (int i = 0; commands[i].name; i++)
         printf("    %-16s  %s\n", commands[i].name, commands[i].description);
+
     printf("    %-16s  %s\n", "cd <dir>",    "Change directory");
     printf("    %-16s  %s\n", "help",        "Show this help");
     printf("    %-16s  %s\n", "exit/quit",   "Exit the shell");
@@ -154,11 +163,9 @@ int main(void)
             break;
         }
 
-        // Strip trailing newline
         input[strcspn(input, "\n")] = '\0';
         if (strlen(input) == 0) continue;
 
-        // Check for pipe
         char *pipe_pos = strchr(input, '|');
         if (pipe_pos) {
             *pipe_pos = '\0';
@@ -166,35 +173,30 @@ int main(void)
             continue;
         }
 
-        // Tokenise
         int argc = tokenise(input, argv);
         if (argc == 0) continue;
 
-        // Built-in: exit
         if (strcmp(argv[0], "exit") == 0 || strcmp(argv[0], "quit") == 0) {
             printf("Goodbye!\n");
             break;
         }
 
-        // Built-in: help
         if (strcmp(argv[0], "help") == 0) {
             print_help();
             continue;
         }
 
-        // Built-in: cd
         if (strcmp(argv[0], "cd") == 0) {
             const char *dir = (argc > 1) ? argv[1] : getenv("HOME");
             if (chdir(dir) < 0) perror("cd");
             continue;
         }
 
-        // Search built-in command table
         int found = 0;
         for (int i = 0; commands[i].name; i++) {
             if (strcmp(argv[0], commands[i].name) == 0) {
                 found = 1;
-                // Fork so redirection doesn't affect the shell itself
+
                 pid_t pid = fork();
                 if (pid == 0) {
                     int new_argc = argc;
@@ -208,7 +210,6 @@ int main(void)
             }
         }
 
-        // External command fallback
         if (!found) {
             pid_t pid = fork();
             if (pid == 0) {

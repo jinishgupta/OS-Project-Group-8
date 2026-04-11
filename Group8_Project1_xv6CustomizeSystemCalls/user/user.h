@@ -1,6 +1,7 @@
 #define SBRK_ERROR ((char *)-1)
 
 struct stat;
+#include "signal.h"
 struct procinfo {
     int  pid;
     int  ppid;
@@ -37,6 +38,9 @@ int semwait(int id);
 int sempost(int id);
 int semclose(int id);
 int  getprocinfo(struct procinfo *);
+int  signal_init(void);
+int  signal_send(int, int);
+int  signal_handle(int, sighandler_t);
 
 // ulib.c
 int stat(const char*, struct stat*);

@@ -146,6 +146,12 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
+  // Initialize signals
+  for(int i = 0; i < NSIG; i++){
+    p->signal_handlers[i] = SIG_DFL;
+  }
+  p->pending_signals = 0;
+
   return p;
 }
 
@@ -169,6 +175,12 @@ freeproc(struct proc *p)
   p->killed = 0;
   p->xstate = 0;
   p->state = UNUSED;
+
+  // Reset signals
+  for(int i = 0; i < NSIG; i++){
+    p->signal_handlers[i] = SIG_DFL;
+  }
+  p->pending_signals = 0;
 }
 
 // Create a user page table for a given process, with no user memory,

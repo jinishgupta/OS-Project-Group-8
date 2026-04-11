@@ -49,3 +49,6 @@ entry("semwait");
 entry("sempost");
 entry("semclose");
 entry("getprocinfo");
+entry("signal_init");
+entry("signal_send");
+entry("signal_handle");

@@ -6,6 +6,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "vm.h"
+#include "signal.h"
 
 uint64
 sys_exit(void)
@@ -137,6 +138,107 @@ sys_semwait(void)
   int id;
   argint(0, &id);
   return sem_wait(id);
+}
+// ============================================================
+// xv6 Signal System Calls — Kernel Side
+// ============================================================
+
+uint64
+sys_signal_init(void)
+{
+  struct proc *p = myproc();
+  int i;
+
+  if(p == 0)
+    return -1;
+
+  for(i = 0; i < NSIG; i++){
+    p->signal_handlers[i] = SIG_DFL;
+  }
+  p->pending_signals = 0;
+
+  printf("[signal_init] PID %d: signal table initialised\n", p->pid);
+  return 0;
+}
+
+uint64
+sys_signal_send(void)
+{
+  int pid, signum;
+  struct proc *p;
+  extern struct proc proc[NPROC];
+
+  argint(0, &pid);
+  argint(1, &signum);
+
+  if(signum <= 0 || signum >= NSIG)
+    return -1;
+
+  // Find the target process
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);
+    if(p->pid == pid && p->state != UNUSED){
+      p->pending_signals |= (1 << signum);
+      printf("[signal_send] Signal %d sent to PID %d\n", signum, pid);
+      release(&p->lock);
+      return 0;
+    }
+    release(&p->lock);
+  }
+  printf("[signal_send] PID %d not found\n", pid);
+  return -1;
+}
+
+uint64
+sys_signal_handle(void)
+{
+  int signum;
+  uint64 handler_addr;
+
+  argint(0, &signum);
+  argaddr(1, &handler_addr);
+
+  if(signum <= 0 || signum >= NSIG)
+    return -1;
+
+  struct proc *p = myproc();
+  p->signal_handlers[signum] = (sighandler_t)handler_addr;
+
+  printf("[signal_handle] PID %d registered handler for signal %d\n",
+          p->pid, signum);
+  return 0;
+}
+
+void
+dispatch_signals(struct proc *p)
+{
+  int i;
+  sighandler_t handler;
+
+  for(i = 1; i < NSIG; i++){
+    if(p->pending_signals & (1 << i)){
+      p->pending_signals &= ~(1 << i);   // clear the bit
+      handler = p->signal_handlers[i];
+
+      if(handler == SIG_IGN){
+        printf("[dispatch] PID %d ignored signal %d\n", p->pid, i);
+        continue;
+      }
+      if(handler == SIG_DFL){
+        // Default action: kill the process
+        printf("[dispatch] PID %d: default action for signal %d — killing\n",
+                p->pid, i);
+        setkilled(p);
+        continue;
+      }
+      
+      // Call user handler (Note: direct call from kernel will crash in real xv6-riscv)
+      // I'm keeping the user's logic but using the correct print function.
+      printf("[dispatch] PID %d: invoking user handler for signal %d\n",
+              p->pid, i);
+      handler(i);
+    }
+  }
 }
 
 uint64

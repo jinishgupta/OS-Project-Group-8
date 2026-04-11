@@ -12,6 +12,7 @@ src/
   shell.c          Main interactive shell
   custom_ls.c      List directory contents
   custom_grep.c    Search for patterns in files
+  custom_cat.c     Concatenate and print files
 Makefile           Build system
 README.md          This file
 ```
@@ -45,6 +46,7 @@ Binaries are placed in `bin/`.
 ```bash
 ./bin/custom_ls -la
 ./bin/custom_grep -in "pattern" file.txt
+./bin/custom_cat -n file.txt
 ```
 
 ## Quick Output Check For ls Command
@@ -66,6 +68,22 @@ custom_ls [OPTIONS] [DIR]
   -a    Show hidden files (starting with .)
   -h    Human-readable sizes (K, M, G)
 ```
+
+### custom_cat — Concatenate and print files
+
+```
+custom_cat [OPTIONS] [FILE...]
+  -n    Number all output lines
+  -h    Display help message
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `FILE...` | One or more files to concatenate. If omitted, reads from stdin |
+
+---
 
 ### custom_grep — Search for a pattern in files
 

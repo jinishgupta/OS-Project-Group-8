@@ -88,6 +88,7 @@ void            proc_freepagetable(pagetable_t, uint64);
 int             kkill(int);
 int             killed(struct proc*);
 void            setkilled(struct proc*);
+void            dispatch_signals(struct proc*); // added for signal project
 struct cpu*     mycpu(void);
 struct proc*    myproc();
 void            procinit(void);

@@ -27,3 +27,6 @@
 #define SYS_sempost   26
 #define SYS_semclose  27
 #define SYS_getprocinfo  28
+#define SYS_signal_init 29
+#define SYS_signal_send 30
+#define SYS_signal_handle 31
