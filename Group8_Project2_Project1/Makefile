@@ -10,11 +10,8 @@ UTIL_SRCS = \
     $(SRC_DIR)/custom_ls.c \
     $(SRC_DIR)/custom_grep.c \
     $(SRC_DIR)/custom_cat.c \
-<<<<<<< HEAD
-    $(SRC_DIR)/custom_wc.c
-=======
-		$(SRC_DIR)/custom_cp.c
->>>>>>> beed2807089f3a56cdd547efc1f6cedef98ad392
+    $(SRC_DIR)/custom_wc.c \
+	$(SRC_DIR)/custom_cp.c
 
 UTIL_OBJS_SHELL = $(UTIL_SRCS:$(SRC_DIR)/%.c=$(BIN_DIR)/shell_%.o)
 
@@ -22,11 +19,8 @@ STANDALONES = \
     $(BIN_DIR)/custom_ls \
     $(BIN_DIR)/custom_grep \
     $(BIN_DIR)/custom_cat \
-<<<<<<< HEAD
-    $(BIN_DIR)/custom_wc
-=======
+    $(BIN_DIR)/custom_wc \
     $(BIN_DIR)/custom_cp
->>>>>>> beed2807089f3a56cdd547efc1f6cedef98ad392
 
 .PHONY: all clean shell standalones run
 

@@ -1,0 +1,65 @@
+# Compiled object files and dependency files
+*.o
+*.d
+*.a
+*.so
+
+# Kernel build artifacts (Project 1)
+kernel/kernel
+kernel/kernel.asm
+kernel/kernel.sym
+kernel/kernel.ld
+kernel/*.asm
+kernel/*.sym
+
+# User binaries (Project 1)
+user/_*
+user/*.asm
+
+# Build output directories (Project 2)
+bin/
+build/
+dist/
+*.out
+
+# Executable files
+*.exe
+*.run
+
+# Temporary and backup files
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+
+# IDE and editor files
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+tags
+TAGS
+etags
+
+# OS-specific files
+Thumbs.db
+.env
+.env.local
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Test outputs
+*.log
+test_output/
+coverage/
+
+# Misc generated files
+*.gch
+*.pch
+.clang_format
