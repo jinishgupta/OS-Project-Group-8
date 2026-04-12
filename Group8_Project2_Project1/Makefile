@@ -9,14 +9,16 @@ BIN_DIR = bin
 UTIL_SRCS = \
     $(SRC_DIR)/custom_ls.c \
     $(SRC_DIR)/custom_grep.c \
-    $(SRC_DIR)/custom_cat.c
+    $(SRC_DIR)/custom_cat.c \
+		$(SRC_DIR)/custom_cp.c
 
 UTIL_OBJS_SHELL = $(UTIL_SRCS:$(SRC_DIR)/%.c=$(BIN_DIR)/shell_%.o)
 
 STANDALONES = \
     $(BIN_DIR)/custom_ls \
     $(BIN_DIR)/custom_grep \
-    $(BIN_DIR)/custom_cat
+    $(BIN_DIR)/custom_cat \
+    $(BIN_DIR)/custom_cp
 
 .PHONY: all clean shell standalones
 
@@ -49,6 +51,10 @@ $(BIN_DIR)/custom_grep: $(SRC_DIR)/custom_grep.c | $(BIN_DIR)
 	@echo "Built: $@"
 
 $(BIN_DIR)/custom_cat: $(SRC_DIR)/custom_cat.c | $(BIN_DIR)
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+	@echo "Built: $@"
+
+$(BIN_DIR)/custom_cp: $(SRC_DIR)/custom_cp.c | $(BIN_DIR)
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 	@echo "Built: $@"
 
