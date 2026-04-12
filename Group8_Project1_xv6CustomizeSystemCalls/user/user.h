@@ -41,6 +41,11 @@ int  getprocinfo(struct procinfo *);
 int  signal_init(void);
 int  signal_send(int, int);
 int  signal_handle(int, sighandler_t);
+int getproccount(void);
+int sendmsg(void);
+int createlock(void);
+int threadcreate(void);
+int sendsignal(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

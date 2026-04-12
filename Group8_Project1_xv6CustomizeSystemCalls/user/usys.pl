@@ -52,3 +52,8 @@ entry("getprocinfo");
 entry("signal_init");
 entry("signal_send");
 entry("signal_handle");
+entry("getproccount");
+entry("sendmsg");
+entry("createlock");
+entry("threadcreate");
+entry("sendsignal");

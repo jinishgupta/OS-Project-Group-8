@@ -282,4 +282,27 @@ sys_getprocinfo(void)
         return -1;
     return 0;
 }
+uint64 sys_getproccount(void) {
+  printf("Kernel: Executing getproccount (Process feature)...\n");
+  return 1; 
+}
 
+uint64 sys_sendmsg(void) {
+  printf("Kernel: Executing sendmsg (IPC feature)...\n");
+  return 1; 
+}
+
+uint64 sys_createlock(void) {
+  printf("Kernel: Executing createlock (Lock feature)...\n");
+  return 1; 
+}
+
+uint64 sys_threadcreate(void) {
+  printf("Kernel: Executing threadcreate (Thread feature)...\n");
+  return 1; 
+}
+
+uint64 sys_sendsignal(void) {
+  printf("Kernel: Executing sendsignal (Signal feature)...\n");
+  return 1; 
+}

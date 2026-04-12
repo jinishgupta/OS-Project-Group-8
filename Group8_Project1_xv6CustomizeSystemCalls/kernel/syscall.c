@@ -111,6 +111,11 @@ extern uint64 sys_getprocinfo(void);
 extern uint64 sys_signal_init(void);
 extern uint64 sys_signal_send(void);
 extern uint64 sys_signal_handle(void);
+extern uint64 sys_getproccount(void);
+extern uint64 sys_sendmsg(void);
+extern uint64 sys_createlock(void);
+extern uint64 sys_threadcreate(void);
+extern uint64 sys_sendsignal(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -146,6 +151,11 @@ static uint64 (*syscalls[])(void) = {
 [SYS_signal_init] sys_signal_init,
 [SYS_signal_send] sys_signal_send,
 [SYS_signal_handle] sys_signal_handle,
+[SYS_getproccount] sys_getproccount,
+[SYS_sendmsg]      sys_sendmsg,
+[SYS_createlock]   sys_createlock,
+[SYS_threadcreate] sys_threadcreate,
+[SYS_sendsignal]   sys_sendsignal,
 };
 
 void

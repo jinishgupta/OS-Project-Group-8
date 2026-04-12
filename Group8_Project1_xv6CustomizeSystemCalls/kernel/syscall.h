@@ -30,3 +30,8 @@
 #define SYS_signal_init 29
 #define SYS_signal_send 30
 #define SYS_signal_handle 31
+#define SYS_getproccount 32
+#define SYS_sendmsg      33
+#define SYS_createlock   34
+#define SYS_threadcreate 35
+#define SYS_sendsignal   36
