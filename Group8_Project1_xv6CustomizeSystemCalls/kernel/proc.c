@@ -151,6 +151,7 @@ found:
     p->signal_handlers[i] = SIG_DFL;
   }
   p->pending_signals = 0;
+  p->sigmask = 0;
 
   return p;
 }

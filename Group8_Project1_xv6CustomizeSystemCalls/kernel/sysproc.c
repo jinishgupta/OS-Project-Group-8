@@ -282,6 +282,55 @@ sys_getprocinfo(void)
         return -1;
     return 0;
 }
+
+uint64
+sys_clone(void)
+{
+  // Basic thread-like clone: for now, just fork (no shared memory)
+  // In a full implementation, share address space
+  return kfork();
+}
+
+uint64
+sys_mutex_create(void)
+{
+  // Simple mutex creation: return a fixed ID for demo
+  // In full impl, manage a pool
+  return 0;  // Dummy ID
+}
+
+uint64
+sys_mutex_lock(void)
+{
+  int id;
+  argint(0, &id);
+  // Dummy lock
+  return 0;
+}
+
+uint64
+sys_mutex_unlock(void)
+{
+  int id;
+  argint(0, &id);
+  // Dummy unlock
+  return 0;
+}
+
+uint64
+sys_sigmask(void)
+{
+  int signum, block;
+  argint(0, &signum);
+  argint(1, &block);
+  struct proc *p = myproc();
+  if (block) {
+    p->sigmask |= (1 << signum);
+  } else {
+    p->sigmask &= ~(1 << signum);
+  }
+  return 0;
+}
 uint64 sys_getproccount(void) {
   printf("Kernel: Executing getproccount (Process feature)...\n");
   return 1; 

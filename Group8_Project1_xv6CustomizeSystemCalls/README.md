@@ -12,6 +12,11 @@
 | 6 | `signal_init()` | Signals | 29 |
 | 7 | `signal_send()` | Signals | 30 |
 | 8 | `signal_handle()` | Signals | 31 |
+| 9 | `clone()` | Threads | 32 |
+| 10 | `mutex_create()` | Synchronization | 33 |
+| 11 | `mutex_lock()` | Synchronization | 34 |
+| 12 | `mutex_unlock()` | Synchronization | 35 |
+| 13 | `sigmask()` | Signals | 36 |
 
 
 ## Files in This Folder
@@ -22,6 +27,7 @@
 | `kernel/sem.h` | Shared semaphore data structures and spinlocks |
 | `user/semtest.c` | User-space demo program — tests synchronization |
 | `user/testgetinfo.c` | User-space demo program — tests getting system info like PID |
+| `user/syscall_demo.c` | User-space demo program — tests `clone`, mutex, and `sigmask` syscalls |
 | `sysproc_additions.c` | New getprocinfo syscall kernel implementation along with original ones |
 | `syscall_additions.h` | Syscall number `#define` macros |
 | `syscall_table_additions.c` | Extern declarations + dispatch table entries |
@@ -68,6 +74,57 @@ The returned data includes:
 
 Returns `0` on success and `-1` on failure.
 
+## Custom Syscall Demo
+
+The `user/syscall_demo.c` program exercises the newly implemented custom syscalls:
+
+- `clone()` for lightweight thread creation
+- `mutex_create()`, `mutex_lock()`, `mutex_unlock()` for mutual exclusion
+- `sigmask()` for signal masking/unmasking
+
+### Expected `syscall_demo` Output
+
+```text
+=== Custom Syscall Demonstration ===
+Testing thread creation, mutex synchronization, and signal masking
+
+1. Testing thread creation (clone syscall):
+   [Child Thread] Created successfully, PID: <pid>
+   [Child Thread] Performing child-specific work...
+   [Child Thread] Iteration 1
+   [Child Thread] Iteration 2
+   [Child Thread] Iteration 3
+   [Child Thread] Exiting
+   [Parent Thread] Created child thread with PID: <pid>
+   [Parent Thread] Waiting for child to complete...
+   [Parent Thread] Child thread completed
+
+2. Testing mutex synchronization:
+   [Mutex] Created mutex with ID: 0
+   [Mutex] Attempting to lock mutex...
+   [Mutex] Successfully locked mutex
+   [Mutex] Performing critical section work...
+   [Mutex] Critical section: count = 42
+   [Mutex] Attempting to unlock mutex...
+   [Mutex] Successfully unlocked mutex
+   [Mutex] Test completed
+
+3. Testing signal masking (sigmask syscall):
+   [Signal] Blocking signal 1...
+   [Signal] Signal 1 is now blocked
+   [Signal] Current process would ignore signal 1 if sent
+   [Signal] Unblocking signal 1...
+   [Signal] Signal 1 is now unblocked
+   [Signal] Current process will handle signal 1 normally
+
+=== Demonstration Complete ===
+All custom syscalls tested successfully!
+```
+
+### Syscall Demo Screenshot
+
+![syscall_demo output](screenshots/syscall_demo.png)
+
 ## Build & Run
 
 ```bash
@@ -76,6 +133,7 @@ make qemu
 $ semtest
 $ testgetinfo
 $ signaltest
+$ syscall_demo
 ```
 
 Press **Ctrl+A then X** to quit QEMU.

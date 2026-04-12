@@ -110,4 +110,5 @@ struct proc {
   // Signal handling
   sighandler_t signal_handlers[NSIG];
   int pending_signals;
+  uint sigmask;  // Signal mask
 };

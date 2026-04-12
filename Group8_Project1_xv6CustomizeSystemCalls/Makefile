@@ -156,6 +156,7 @@ UPROGS=\
 	$U/_semtest\
 	$U/_testgetinfo\
 	$U/_signaltest\
+	$U/_syscall_demo\
 
 fs.img: mkfs/mkfs README.md $(UPROGS)
 	mkfs/mkfs fs.img README.md $(UPROGS)

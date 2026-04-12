@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[]) {
+int cmd_cp(int argc, char *argv[]) {
     FILE *src, *dest;
     char buffer[1024];
     size_t bytes;
@@ -55,3 +55,10 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
+// Standalone entry point
+#ifndef SHELL_BUILD
+int main(int argc, char *argv[]) {
+    return cmd_cp(argc, argv);
+}
+#endif

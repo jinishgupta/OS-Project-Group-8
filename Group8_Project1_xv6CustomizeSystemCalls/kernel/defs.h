@@ -103,6 +103,31 @@ int             either_copyout(int user_dst, uint64 dst, void *src, uint64 len);
 int             either_copyin(void *dst, int user_src, uint64 src, uint64 len);
 void            procdump(void);
 
+// sysproc.c
+uint64          sys_exit(void);
+uint64          sys_getpid(void);
+uint64          sys_fork(void);
+uint64          sys_wait(void);
+uint64          sys_sbrk(void);
+uint64          sys_pause(void);
+uint64          sys_kill(void);
+uint64          sys_uptime(void);
+uint64          sys_trying(void);
+uint64          sys_tryint(void);
+uint64          sys_semget(void);
+uint64          sys_semwait(void);
+uint64          sys_signal_init(void);
+uint64          sys_signal_send(void);
+uint64          sys_signal_handle(void);
+uint64          sys_sempost(void);
+uint64          sys_semclose(void);
+uint64          sys_getprocinfo(void);
+uint64          sys_clone(void);
+uint64          sys_mutex_create(void);
+uint64          sys_mutex_lock(void);
+uint64          sys_mutex_unlock(void);
+uint64          sys_sigmask(void);
+
 // swtch.S
 void            swtch(struct context*, struct context*);
 
