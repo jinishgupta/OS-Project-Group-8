@@ -13,6 +13,7 @@ src/
   custom_ls.c      List directory contents
   custom_grep.c    Search for patterns in files
   custom_cat.c     Concatenate and print files
+  custom_cp.c      Copy files with overwrite prompt
 Makefile           Build system
 README.md          This file
 ```
@@ -47,6 +48,7 @@ Binaries are placed in `bin/`.
 ./bin/custom_ls -la
 ./bin/custom_grep -in "pattern" file.txt
 ./bin/custom_cat -n file.txt
+./bin/custom_cp source.txt dest.txt
 ```
 
 ## Quick Output Check For ls Command
@@ -82,6 +84,20 @@ custom_cat [OPTIONS] [FILE...]
 | Argument | Description |
 |----------|-------------|
 | `FILE...` | One or more files to concatenate. If omitted, reads from stdin |
+
+---
+
+### custom_cp — Copy files with overwrite prompt
+
+```
+custom_cp <source> <destination>
+```
+
+**Behavior:**
+
+- Copies the source file to the destination path using a buffered read/write loop.
+- If the destination file already exists, prompts the user to confirm overwrite (`y`/`n`).
+- Prints a success message on completion or an error message if the source cannot be opened or the destination cannot be created.
 
 ---
 
