@@ -259,11 +259,28 @@ PASS: SIGUSR1 ignored
 [dispatch] PID 5: default action for signal 1 — killing
 PASS: child was killed by default handler
 ```
-
-### Custom_wc output
-```text
-Lines: 15 Words: 60 Characters:400 testfile.txt
+### Expected project1.c demo
 ```
+--- Starting Project 1 Demonstrations ---
+
+1. Testing Process Feature:
+Kernel: Executing getproccount (Process feature)...
+
+2. Testing IPC Feature:
+Kernel: Executing sendmsg (IPC feature)...
+
+3. Testing Lock Feature:
+Kernel: Executing createlock (Lock feature)...
+
+4. Testing Thread Feature:
+Kernel: Executing threadcreate (Thread feature)...
+
+5. Testing Signal Feature:
+Kernel: Executing sendsignal (Signal feature)...
+
+--- Demonstrations Complete ---
+```
+
 
 
 
