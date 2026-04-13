@@ -13,7 +13,8 @@ src/
   custom_ls.c      List directory contents
   custom_grep.c    Search for patterns in files
   custom_cat.c     Concatenate and print files
-  custom_cp.c      Copy files with overwrite prompt
+  custom_cp.c      Copy files with overwrite prompt\
+  custom_wc.c      counts the number of characters words and lines.
 Makefile           Build system
 README.md          This file
 ```
@@ -101,6 +102,20 @@ custom_cp <source> <destination>
 
 ---
 
+### custom_wc — Word, line, and character count
+```
+custom_wc <filename>
+```
+**Behavior**
+- Analyzes the specified file to calculate the total number of lines, words, and characters.
+
+- Utilizes state-tracking logic to identify word boundaries by detecting transitions from whitespace to non-whitespace characters.
+
+- Outputs the final results in a single line formatted as: lines words characters filename.
+
+- Includes error handling to notify the user if the filename argument is missing or if the target file cannot be opened.
+
+
 ### custom_grep — Search for a pattern in files
 
 ```
@@ -110,7 +125,6 @@ custom_grep [OPTIONS] PATTERN [FILE...]
   -n    Show line numbers alongside matching lines
   -c    Only show a count of matching lines, not the lines themselves
 ```
-
 **Arguments:**
 
 | Argument | Description |
