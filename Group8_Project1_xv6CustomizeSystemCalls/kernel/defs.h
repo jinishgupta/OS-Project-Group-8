@@ -127,6 +127,9 @@ uint64          sys_mutex_create(void);
 uint64          sys_mutex_lock(void);
 uint64          sys_mutex_unlock(void);
 uint64          sys_sigmask(void);
+uint64          sys_shmget(void);
+uint64          sys_shmat(void);
+uint64          sys_shmdt(void);
 
 // swtch.S
 void            swtch(struct context*, struct context*);
@@ -175,6 +178,12 @@ int             sem_get(int, int);
 int             sem_wait(int);
 int             sem_post(int);
 int             sem_close(int);
+
+// shmem.c
+void            shmem_init(void);
+int             shmem_get(int, int);
+uint64          shmem_at(int);
+int             shmem_dt(uint64);
 
 // uart.c
 void            uartinit(void);

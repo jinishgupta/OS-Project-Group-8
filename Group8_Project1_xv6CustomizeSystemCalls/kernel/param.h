@@ -13,4 +13,5 @@
 #define MAXPATH      128   // maximum file path name
 #define USERSTACK    1     // user stack pages
 #define NSEM         16    // max number of semaphores
+#define NSHMEM       16    // max number of shared memory regions
 

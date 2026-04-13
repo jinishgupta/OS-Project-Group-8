@@ -40,3 +40,6 @@
 #define SYS_createlock   39
 #define SYS_threadcreate 40
 #define SYS_sendsignal   41
+#define SYS_shmget       42
+#define SYS_shmat        43
+#define SYS_shmdt        44

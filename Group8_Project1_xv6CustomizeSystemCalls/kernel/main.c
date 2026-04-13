@@ -21,6 +21,7 @@ main()
     kvminithart();   // turn on paging
     procinit();      // process table
     seminit();       // semaphores
+    shmem_init();    // shared memory regions
     trapinit();      // trap vectors
     trapinithart();  // install kernel trap vector
     plicinit();      // set up interrupt controller

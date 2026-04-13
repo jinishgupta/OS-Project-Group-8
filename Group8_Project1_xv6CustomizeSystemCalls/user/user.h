@@ -51,6 +51,9 @@ int sendmsg(void);
 int createlock(void);
 int threadcreate(void);
 int sendsignal(void);
+int shmget(int key, int size);
+void* shmat(int id);
+int shmdt(void* addr);
 
 // ulib.c
 int stat(const char*, struct stat*);

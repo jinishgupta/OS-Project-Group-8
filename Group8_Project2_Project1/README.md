@@ -2,7 +2,7 @@
 
 ## Overview
 
-A complete interactive shell (`myshell`) built from scratch in C, with a unified custom utility for listing contents. 
+A complete interactive shell (`myshell`) built from scratch in C, with a suite of custom utilities.
 Every utility is implemented **from scratch** using only POSIX system calls — no coreutils, no shell scripts.
 
 ## Files
@@ -13,8 +13,9 @@ src/
   custom_ls.c      List directory contents
   custom_grep.c    Search for patterns in files
   custom_cat.c     Concatenate and print files
-  custom_cp.c      Copy files with overwrite prompt\
-  custom_wc.c      counts the number of characters words and lines.
+  custom_cp.c      Copy files with overwrite prompt
+  custom_wc.c      Count characters, words, and lines
+  custom_rm.c      Remove files and directories
 Makefile           Build system
 README.md          This file
 ```
@@ -22,7 +23,7 @@ README.md          This file
 ## Build
 
 ```bash
-# Build everything (shell + standalone utility)
+# Build everything (shell + standalone utilities)
 make
 
 # Build only the shell
@@ -50,6 +51,9 @@ Binaries are placed in `bin/`.
 ./bin/custom_grep -in "pattern" file.txt
 ./bin/custom_cat -n file.txt
 ./bin/custom_cp source.txt dest.txt
+./bin/custom_wc file.txt
+./bin/custom_rm file.txt
+./bin/custom_rm -r mydir/
 ```
 
 ## Quick Output Check For ls Command
@@ -171,11 +175,74 @@ custom_grep "pattern" < input.txt
 
 ---
 
+### custom_rm — Remove files and directories
+
+```
+custom_rm [OPTIONS] <path>...
+  -r    Recursively remove a directory and all its contents
+  -f    Force: silently ignore non-existent files (no error)
+  -rf   Recursive + force combined
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `path...` | One or more files or directories to remove |
+
+**Behavior:**
+
+- Without flags, removes a single file. Prints an error if the path does not exist or is a directory.
+- With `-r`, recursively removes a directory tree — traverses all subdirectories and deletes all files and folders bottom-up using `opendir`/`readdir`/`unlink`/`rmdir`.
+- With `-f`, suppresses errors for paths that do not exist (exit code is still `0`). Non-existence is silently ignored.
+- With `-rf`, combines recursive removal with the force flag — useful for removing directories without confirmation errors.
+- Multiple paths can be provided; each is processed in order.
+
+**Exit codes:**
+
+| Code | Meaning |
+|------|---------|
+| `0`  | All specified paths were successfully removed (or silently skipped with `-f`) |
+| `1`  | One or more paths could not be removed (permission denied, path in use, etc.) |
+
+**Examples:**
+
+```bash
+# Remove a single file
+custom_rm file.txt
+
+# Remove multiple files
+custom_rm file1.txt file2.txt
+
+# Remove a directory recursively
+custom_rm -r mydir/
+
+# Force-remove (no error if file doesn't exist)
+custom_rm -f nonexistent.txt
+
+# Recursive + force (typical for cleaning up directories)
+custom_rm -rf build/
+
+# Use inside the shell
+custom_rm -r temp_folder/
+```
+
+**Notes:**
+
+- `custom_rm` will refuse to remove a directory without the `-r` flag and prints a descriptive error.
+- Hidden files and subdirectories are included in recursive removal.
+- Symlinks are removed as files (the link itself is deleted, not the target).
+
+---
+
 ## Shell Features
+
+The interactive shell (`myshell`) supports running all custom utilities as built-in commands, as well as any external program available on the system.
 
 | Feature | Example |
 |---------|---------|
 | Run built-in commands | `custom_ls -la` or `custom_grep pattern` |
+| Remove files/dirs | `custom_rm -rf build/` |
 | Change directory | `cd /tmp` |
 | Output redirection | `custom_ls > out.txt` |
 | Input redirection | `custom_grep pattern < in.txt` |
@@ -184,8 +251,22 @@ custom_grep "pattern" < input.txt
 | Help | `help` |
 | Exit | `exit` or `quit` |
 
+**Built-in commands available in the shell:**
+
+| Command | Description |
+|---------|-------------|
+| `custom_ls` | List directory contents |
+| `custom_grep` | Search for a pattern in files |
+| `custom_cat` | Display file contents |
+| `custom_cp` | Copy files |
+| `custom_rm` | Remove files or directories |
+| `cd` | Change current directory |
+| `help` | Show available commands |
+| `exit` / `quit` | Exit the shell |
+
 **Notes:**
 
 - Input redirection is supported by the shell, but `custom_ls` does not normally consume stdin.
 - If multiple directory arguments are passed to `custom_ls`, the last non-option argument is used.
 - `custom_grep` fully supports both input redirection and pipe input from the shell.
+- `custom_rm -rf` inside the shell runs in a forked child process, keeping the shell itself safe.

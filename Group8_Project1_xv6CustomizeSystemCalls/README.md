@@ -22,6 +22,9 @@
 | 16 | `createlock()` | Synchronization | 39 |
 | 17 | `threadcreate()` | Threads | 40 |
 | 18 | `sendsignal()` | Signals | 41 |
+| 19 | `shmget()` | Shared Memory | 42 |
+| 20 | `shmat()` | Shared Memory | 43 |
+| 21 | `shmdt()` | Shared Memory | 44 |
 
 
 ## Files in This Folder
@@ -43,6 +46,9 @@
 | `user_additions.h` | User-space function prototypes and `struct procinfo` |
 | `myshell.c` | Custom UNIX-like shell implementation (Project 2) |
 | `custom_wc.c` | Custom Word Count utility (Project 2) |
+| `kernel/shmem.c` | Shared memory management (kalloc-backed regions) |
+| `kernel/shmem.h` | Shared memory data structures and internal types |
+| `user/shmtest.c` | User-space test program for shared memory IPC |
 
 ## Semaphore API Reference
 
@@ -57,6 +63,17 @@ The **V** (verhogen) operation. Increments the semaphore value and wakes up one 
 
 ### 4. `int semclose(int id)`
 Destroys the semaphore and wakes up all waiting processes with an error code.
+
+## Shared Memory API Reference
+
+### 1. `int shmget(int key, int size)`
+Creates or retrieves a shared memory ID associated with a key. Currently supports a `size` up to 1 page (4096 bytes).
+
+### 2. `void* shmat(int id)`
+Maps the shared memory region into the process's page table. Returns the starting user virtual address on success, or `(void*)-1` on error.
+
+### 3. `int shmdt(void *addr)`
+Detaches (unmaps) the shared memory region from the process's address space. The physical page is freed only when the last process detaches.
 
 ## Signal API Reference
 
@@ -152,6 +169,7 @@ Testing thread creation, mutex synchronization, and signal masking
 
 === Demonstration Complete ===
 All custom syscalls tested successfully!
+```
 ### Syscall Demo Screenshot
 
 ![syscall_demo output](screenshots/syscall_demo.png)
@@ -165,6 +183,7 @@ $ semtest
 $ testgetinfo
 $ signaltest
 $ syscall_demo
+$ shmtest
 ```
 
 Press **Ctrl+A then X** to quit QEMU.
@@ -177,6 +196,21 @@ semtest: parent waiting for child...
 semtest: child signaling parent...
 semtest: parent resumed!
 semtest: PASSED
+```
+
+## Expected `shmtest` Output
+
+```text
+shmtest: starting shared memory test
+shmtest: shmget returned id=0
+shmtest: parent mapped shared region at 0x...
+shmtest: parent wrote 0xdeadbeef to shared memory
+shmtest: child mapped shared region at 0x...
+shmtest: child read 0xdeadbeef from shared memory
+shmtest: PASS — child read the correct value written by parent
+shmtest: parent: child exited
+shmtest: parent detached shared region
+shmtest: done
 ```
 
 ### Expected `testgetinfo` Output
@@ -289,3 +323,4 @@ Kernel: Executing sendsignal (Signal feature)...
 - **Semaphores**: Implemented using a global `semtable` protected by a spinlock. Individual semaphores also have their own spinlocks to ensure atomicity during sleep/wakeup.
 - **Sleep/Wakeup**: Leverages the kernel's existing `sleep()` and `wakeup()` functions for process synchronization.
 - **getprocinfo**: Uses `copyout()` to safely transfer kernel struct data to user space.
+- **Shared Memory**: Managed by a global table (`shmtable`) and synchronized via `shmlock`. Utilizes the kernel's `kalloc()` to allocate physical pages and `mappages()` to inject them into process page tables. Refcounting ensures pages are only freed when no processes are attached.

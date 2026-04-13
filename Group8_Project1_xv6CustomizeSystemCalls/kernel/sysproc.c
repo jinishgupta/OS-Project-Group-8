@@ -355,3 +355,32 @@ uint64 sys_sendsignal(void) {
   printf("Kernel: Executing sendsignal (Signal feature)...\n");
   return 1; 
 }
+
+// ============================================================
+// Shared Memory System Calls
+// ============================================================
+
+uint64
+sys_shmget(void)
+{
+  int key, size;
+  argint(0, &key);
+  argint(1, &size);
+  return shmem_get(key, size);
+}
+
+uint64
+sys_shmat(void)
+{
+  int id;
+  argint(0, &id);
+  return shmem_at(id);
+}
+
+uint64
+sys_shmdt(void)
+{
+  uint64 addr;
+  argaddr(0, &addr);
+  return shmem_dt(addr);
+}

@@ -116,6 +116,9 @@ extern uint64 sys_sendmsg(void);
 extern uint64 sys_createlock(void);
 extern uint64 sys_threadcreate(void);
 extern uint64 sys_sendsignal(void);
+extern uint64 sys_shmget(void);
+extern uint64 sys_shmat(void);
+extern uint64 sys_shmdt(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -161,6 +164,9 @@ static uint64 (*syscalls[])(void) = {
 [SYS_createlock]   sys_createlock,
 [SYS_threadcreate] sys_threadcreate,
 [SYS_sendsignal]   sys_sendsignal,
+[SYS_shmget]       sys_shmget,
+[SYS_shmat]        sys_shmat,
+[SYS_shmdt]        sys_shmdt,
 };
 
 void

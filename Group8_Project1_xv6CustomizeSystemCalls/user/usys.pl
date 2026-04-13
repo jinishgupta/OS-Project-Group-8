@@ -62,3 +62,6 @@ entry("sendmsg");
 entry("createlock");
 entry("threadcreate");
 entry("sendsignal");
+entry("shmget");
+entry("shmat");
+entry("shmdt");

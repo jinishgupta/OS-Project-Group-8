@@ -5,13 +5,13 @@ LDFLAGS =
 SRC_DIR = src
 BIN_DIR = bin
 
-# All utility source files (shared between shell and standalones)
+# All utility source files linked into the shell (must use SHELL_BUILD guard)
 UTIL_SRCS = \
     $(SRC_DIR)/custom_ls.c \
     $(SRC_DIR)/custom_grep.c \
     $(SRC_DIR)/custom_cat.c \
-    $(SRC_DIR)/custom_wc.c \
-	$(SRC_DIR)/custom_cp.c
+	$(SRC_DIR)/custom_cp.c \
+	$(SRC_DIR)/custom_rm.c
 
 UTIL_OBJS_SHELL = $(UTIL_SRCS:$(SRC_DIR)/%.c=$(BIN_DIR)/shell_%.o)
 
@@ -20,7 +20,8 @@ STANDALONES = \
     $(BIN_DIR)/custom_grep \
     $(BIN_DIR)/custom_cat \
     $(BIN_DIR)/custom_wc \
-    $(BIN_DIR)/custom_cp
+    $(BIN_DIR)/custom_cp \
+    $(BIN_DIR)/custom_rm
 
 .PHONY: all clean shell standalones run
 
@@ -61,6 +62,10 @@ $(BIN_DIR)/custom_wc: $(SRC_DIR)/custom_wc.c | $(BIN_DIR)
 	@echo "Built: $@"
 
 $(BIN_DIR)/custom_cp: $(SRC_DIR)/custom_cp.c | $(BIN_DIR)
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+	@echo "Built: $@"
+
+$(BIN_DIR)/custom_rm: $(SRC_DIR)/custom_rm.c | $(BIN_DIR)
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 	@echo "Built: $@"
 
