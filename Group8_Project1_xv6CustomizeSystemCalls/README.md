@@ -17,6 +17,11 @@
 | 11 | `mutex_lock()` | Synchronization | 34 |
 | 12 | `mutex_unlock()` | Synchronization | 35 |
 | 13 | `sigmask()` | Signals | 36 |
+| 14 | `getproccount()` | Process Info | 37 |
+| 15 | `sendmsg()` | IPC | 38 |
+| 16 | `createlock()` | Synchronization | 39 |
+| 17 | `threadcreate()` | Threads | 40 |
+| 18 | `sendsignal()` | Signals | 41 |
 
 
 ## Files in This Folder
@@ -28,6 +33,7 @@
 | `user/semtest.c` | User-space demo program — tests synchronization |
 | `user/testgetinfo.c` | User-space demo program — tests getting system info like PID |
 | `user/syscall_demo.c` | User-space demo program — tests `clone`, mutex, and `sigmask` syscalls |
+| `user/project1.c` | Master demonstration program for the 5 custom system calls |
 | `sysproc_additions.c` | New getprocinfo syscall kernel implementation along with original ones |
 | `syscall_additions.h` | Syscall number `#define` macros |
 | `syscall_table_additions.c` | Extern declarations + dispatch table entries |
@@ -35,6 +41,8 @@
 | `kernel/signal.h` | Signal definitions and constants |
 | `user/signaltest.c` | User-space demo program — tests signal handling |
 | `user_additions.h` | User-space function prototypes and `struct procinfo` |
+| `myshell.c` | Custom UNIX-like shell implementation (Project 2) |
+| `custom_wc.c` | Custom Word Count utility (Project 2) |
 
 ## Semaphore API Reference
 
@@ -67,6 +75,111 @@ Registers a user-space handler function for a given signal number. Special handl
 Copies information about the current process into the user-provided `struct procinfo` buffer.
 The returned data includes:
 
+- `pid`: current process ID
+- `ppid`: parent process ID
+- `state`: current process state
+- `name`: process name
+
+Returns `0` on success and `-1` on failure.
+
+## Custom Syscall Demo (New Additions)
+
+### 1. `int getproccount(void)`
+Returns the total number of active processes in the xv6 system.
+
+### 2. `int sendmsg(void)`
+A kernel-level implementation for inter-process messaging.
+
+### 3. `int createlock(void)`
+Initializes a synchronization lock within the kernel space.
+
+### 4. `int threadcreate(void)`
+Facilitates the creation of lightweight threads sharing the parent's address space.
+
+### 5. `int sendsignal(void)`
+A secondary signal delivery mechanism for cross-process communication.
+
+## Project 2 — Custom Shell & `custom_wc`
+
+### 1. `myshell`
+A C-based shell running on the host OS that implements the `fork()` and `execvp()` model to run custom utilities.
+
+### 2. `custom_wc`
+A custom implementation of the Word Count utility that manually calculates lines, words, and characters by parsing file streams.
+
+## Custom Syscall Demo
+
+The `user/syscall_demo.c` program exercises the newly implemented custom syscalls:
+
+- `clone()` for lightweight thread creation
+- `mutex_create()`, `mutex_lock()`, `mutex_unlock()` for mutual exclusion
+- `sigmask()` for signal masking/unmasking
+
+### Expected `syscall_demo` Output
+
+```text
+=== Custom Syscall Demonstration ===
+Testing thread creation, mutex synchronization, and signal masking
+
+1. Testing thread creation (clone syscall):
+   [Child Thread] Created successfully, PID: <pid>
+   [Child Thread] Performing child-specific work...
+   [Child Thread] Iteration 1
+   [Child Thread] Iteration 2
+   [Child Thread] Iteration 3
+   [Child Thread] Exiting
+   [Parent Thread] Created child thread with PID: <pid>
+   [Parent Thread] Waiting for child to complete...
+   [Parent Thread] Child thread completed
+
+2. Testing mutex synchronization:
+   [Mutex] Created mutex with ID: 0
+   [Mutex] Attempting to lock mutex...
+   [Mutex] Successfully locked mutex
+   [Mutex] Performing critical section work...
+   [Mutex] Critical section: count = 42
+   [Mutex] Attempting to unlock mutex...
+   [Mutex] Successfully unlocked mutex
+   [Mutex] Test completed
+
+3. Testing signal masking (sigmask syscall):
+   [Signal] Blocking signal 1...
+   [Signal] Signal 1 is now blocked
+   [Signal] Current process would ignore signal 1 if sent
+   [Signal] Unblocking signal 1...
+   [Signal] Signal 1 is now unblocked
+   [Signal] Current process will handle signal 1 normally
+
+=== Demonstration Complete ===
+All custom syscalls tested successfully!
+### Syscall Demo Screenshot
+
+![syscall_demo output](screenshots/syscall_demo.png)
+
+## Build & Run
+
+```bash
+make qemu
+# Inside xv6 shell:
+$ semtest
+$ testgetinfo
+$ signaltest
+$ syscall_demo
+```
+
+Press **Ctrl+A then X** to quit QEMU.
+
+## Expected `semtest` Output
+
+```text
+semtest: starting...
+semtest: parent waiting for child...
+semtest: child signaling parent...
+semtest: parent resumed!
+semtest: PASSED
+```
+
+### Expected `testgetinfo` Output
 - `pid`: current process ID
 - `ppid`: parent process ID
 - `state`: current process state
@@ -121,34 +234,6 @@ Testing thread creation, mutex synchronization, and signal masking
 All custom syscalls tested successfully!
 ```
 
-### Syscall Demo Screenshot
-
-![syscall_demo output](screenshots/syscall_demo.png)
-
-## Build & Run
-
-```bash
-make qemu
-# Inside xv6 shell:
-$ semtest
-$ testgetinfo
-$ signaltest
-$ syscall_demo
-```
-
-Press **Ctrl+A then X** to quit QEMU.
-
-## Expected `semtest` Output
-
-```text
-semtest: starting...
-semtest: parent waiting for child...
-semtest: child signaling parent...
-semtest: parent resumed!
-semtest: PASSED
-```
-
-### Expected `testgetinfo` Output
 
 ```text
 testgetinfo: PID=3  PPID=2  State=4  Name=testgetinfo
@@ -174,6 +259,12 @@ PASS: SIGUSR1 ignored
 [dispatch] PID 5: default action for signal 1 — killing
 PASS: child was killed by default handler
 ```
+
+### Custom_wc output
+```text
+Lines: 15 Words: 60 Characters:400 testfile.txt
+```
+
 
 
 ## Design Notes
