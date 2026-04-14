@@ -37,11 +37,6 @@ int semget(int key, int initval);
 int semwait(int id);
 int sempost(int id);
 int semclose(int id);
-int  getprocinfo(struct procinfo *);
-int  signal_init(void);
-int  signal_send(int, int);
-int  signal_handle(int, sighandler_t);
-int clone(void);
 int mutex_create(void);
 int mutex_lock(int id);
 int mutex_unlock(int id);
@@ -54,6 +49,9 @@ int sendsignal(void);
 int shmget(int key, int size);
 void* shmat(int id);
 int shmdt(void* addr);
+int thread_create(void);
+int tjoin(int);
+int texit(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

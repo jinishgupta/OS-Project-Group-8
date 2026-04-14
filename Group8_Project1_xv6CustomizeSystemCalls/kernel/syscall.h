@@ -35,11 +35,9 @@
 #define SYS_mutex_lock 34
 #define SYS_mutex_unlock 35
 #define SYS_sigmask 36
-#define SYS_getproccount 37
-#define SYS_sendmsg      38
-#define SYS_createlock   39
-#define SYS_threadcreate 40
-#define SYS_sendsignal   41
 #define SYS_shmget       42
 #define SYS_shmat        43
 #define SYS_shmdt        44
+#define SYS_thread_create 45
+#define SYS_tjoin         46
+#define SYS_texit         47
