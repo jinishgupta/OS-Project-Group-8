@@ -20,6 +20,9 @@
 | 19 | `shmget()` | Shared Memory | 42 |
 | 20 | `shmat()` | Shared Memory | 43 |
 | 21 | `shmdt()` | Shared Memory | 44 |
+| 22 | `thread_create` | Threads | 45 |
+| 23 | `tjoin()`       | Threads | 46 |
+| 24 | `texit()`       | Threads | 47 |   
 
 
 ## Files in This Folder
@@ -288,7 +291,24 @@ PASS: SIGUSR1 ignored
 [dispatch] PID 5: default action for signal 1 — killing
 PASS: child was killed by default handler
 ```
+### Expected project1.c output
+```
+--- Starting Thread Management Test ---
 
+[Test 1] Calling thread_create()...
+Kernel: Executing thread_create...
+-> thread_create() returned Thread ID: 1
+
+[Test 2] Calling tjoin() on Thread ID 1...
+Kernel: Executing tjoin to wait for thread 1...
+-> tjoin() returned: 0
+
+[Test 3] Calling texit()...
+Kernel: Executing texit...
+-> texit() returned: 0
+
+--- Thread Management Test Complete ---
+```
 
 ## Design Notes
 
