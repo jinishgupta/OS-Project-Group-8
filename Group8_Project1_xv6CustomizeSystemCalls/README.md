@@ -20,9 +20,12 @@
 | 14 | `mutex_lock()` | Synchronization | 37 | Jatin Sargara |
 | 15 | `mutex_unlock()` | Synchronization | 38 | Jatin Sargara |
 | 16 | `sigmask()` | Signals | 39 | Jatin Sargara |
-| 17 | `shmget()` | Shared Memory | 45 | Kanala Venkata Bala Sekhar Reddy |
-| 18 | `shmat()` | Shared Memory | 46 | Kanala Venkata Bala Sekhar Reddy |
-| 19 | `shmdt()` | Shared Memory | 47 | Kanala Venkata Bala Sekhar Reddy |
+| 17 | `shmget()` | Shared Memory | 40 | Kanala Venkata Bala Sekhar Reddy |
+| 18 | `shmat()` | Shared Memory | 41 | Kanala Venkata Bala Sekhar Reddy |
+| 19 | `shmdt()` | Shared Memory | 42 | Kanala Venkata Bala Sekhar Reddy |
+| 20 | `thread_create()` | Threads | 43 | Jay Nitin Solanki |
+| 21 | `tjoin()` | Threads | 44 | Jay Nitin Solanki |
+| 22 | `texit()` | Threads | 45 | Jay Nitin Solanki |
 
 ## Files Changed
 
@@ -106,6 +109,17 @@
 
 - **`int sigmask(int signum, int block)`**
   Toggles signal masking and blocks unmasking behaviors for active processes.
+
+### 6. Thread Management APIs (Jay Nitin Solanki)
+
+- **`int thread_create(void)`**
+  Creates a new lightweight thread of execution sharing the parent's address space. Returns the thread ID.
+
+- **`int tjoin(int thread_id)`**
+  Waits for the specified thread to complete its execution and returns its exit status.
+
+- **`int texit(void)`**
+  Terminates the calling thread's execution, cleans up its resources, and wakes up the parent waiting via `tjoin`.
 
 ## Build & Run
 
@@ -216,7 +230,7 @@ PASS: SIGUSR1 ignored
 [dispatch] PID 5: default action for signal 1 — killing
 PASS: child was killed by default handler
 ```
-### Expected project1.c output
+### 6. Expected `project1` output
 ```
 --- Starting Thread Management Test ---
 
