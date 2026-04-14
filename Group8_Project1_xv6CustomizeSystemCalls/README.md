@@ -131,6 +131,7 @@ $ testgetinfo
 $ signaltest
 $ syscall_demo
 $ shmtest
+$ project1
 ```
 
 Press **Ctrl+A then X** to quit QEMU.

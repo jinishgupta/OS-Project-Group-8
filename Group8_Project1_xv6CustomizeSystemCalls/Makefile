@@ -159,7 +159,7 @@ UPROGS=\
 	$U/_signaltest\
 	$U/_syscall_demo\
 	$U/_shmtest\
-	$U/_project1.c\
+	$U/_project1\
 
 fs.img: mkfs/mkfs README.md $(UPROGS)
 	mkfs/mkfs fs.img README.md $(UPROGS)
