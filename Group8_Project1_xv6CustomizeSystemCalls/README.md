@@ -49,7 +49,7 @@
 
 ## Functions Implemented By Everyone
 
-### 1. Semaphore API References (Dhanunjaya Reddy)
+### 1. Semaphore Commands References (Dhanunjaya Reddy)
 
 - **`int semget(int key, int initval)`**
   Initializes or retrieves a counting semaphore associated with a key. Returns the semaphore ID.
@@ -63,7 +63,7 @@
 - **`int semclose(int id)`**
   Destroys the semaphore and wakes up all waiting processes with an error code.
 
-### 2. Process Info & Process Creation APIs (Jinish Gupta)
+### 2. Process Info & Process Creation Commands (Jinish Gupta)
 
 - **`int getprocinfo(struct procinfo *info)`**
   Copies information about the current process into the user-provided `struct procinfo` buffer. The returned data includes PID, state, and name. Returns `0` on success and `-1` on failure.
@@ -77,7 +77,7 @@
 - **`int getfreeprocs(void)`**
   Retrieves the total number of currently unused process structures (`UNUSED` state) within the process table. Helpful to see how many new processes can be created.
 
-### 3. Signal API References (Mani Pradeep Chowdary)
+### 3. Signal Commands References (Mani Pradeep Chowdary)
 
 - **`int signal_init(void)`**
   Initializes the signal table for the current process. Sets all handlers to `SIG_DFL` (default) and clears the pending-signal bitmask.
@@ -88,7 +88,7 @@
 - **`int signal_handle(int signum, sighandler_t handler)`**
   Registers a user-space handler function for a given signal number. Special handlers include `SIG_IGN` (ignore) and `SIG_DFL` (default action, usually kills process).
 
-### 4. Shared Memory API References (Bala Sekhar Reddy)
+### 4. Shared Memory Commands References (Bala Sekhar Reddy)
 
 - **`int shmget(int key, int size)`**
   Creates or retrieves a shared memory ID associated with a key. Currently supports a `size` up to 1 page (4096 bytes).
@@ -99,7 +99,7 @@
 - **`int shmdt(void *addr)`**
   Detaches (unmaps) the shared memory region from the process's address space. The physical page is freed only when the last process detaches.
 
-### 5. Thread & Synchronization Subsystems (Jatin Sargara)
+### 5. Thread & Synchronization Commands (Jatin Sargara)
 
 - **`int clone(void)`**
   Facilitates the creation of lightweight threads sharing the parent's address space.
@@ -110,7 +110,7 @@
 - **`int sigmask(int signum, int block)`**
   Toggles signal masking and blocks unmasking behaviors for active processes.
 
-### 6. Thread Management APIs (Jay Nitin Solanki)
+### 6. Thread Management Commands (Jay Nitin Solanki)
 
 - **`int thread_create(void)`**
   Creates a new lightweight thread of execution sharing the parent's address space. Returns the thread ID.
