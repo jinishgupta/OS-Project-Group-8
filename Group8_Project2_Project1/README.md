@@ -5,6 +5,21 @@
 A complete interactive shell (`myshell`) built from scratch in C, with a suite of custom utilities.
 Every utility is implemented **from scratch** using only POSIX system calls — no coreutils, no shell scripts.
 
+## Team Contributions
+
+This project was collaboratively developed by our team. Below is the breakdown of who implemented which command/utility:
+
+| Component/Utility | Implemented By |
+|-------------------|----------------|
+| `myshell` (Interactive Shell) | Jinish Gupta |
+| `custom_ls` | Jinish Gupta |
+| `custom_grep` | Jaya Reddy Gari Dhanunjaya Reddy |
+| `custom_cat` | Jammigumpula Mani Pradeep Chowdary |
+| `custom_cp` | Jatin Sargara |
+| `custom_wc` | Jay Solanki |
+| `custom_rm` | Kanala Venkata Bala Sekhar Reddy |
+
+
 ## Files
 
 ```
@@ -53,16 +68,6 @@ Binaries are placed in `bin/`.
 ./bin/custom_cp source.txt dest.txt
 ./bin/custom_wc file.txt
 ./bin/custom_rm file.txt
-./bin/custom_rm -r mydir/
-```
-
-## Quick Output Check For ls Command
-
-```text
-drwxrwxr-x   2 user     user        4096 Apr 11 15:07 .
-drwxrwxr-x   4 user     user        4096 Apr 11 16:09 ..
--rw-rw-r--   1 user     user        4294 Apr 11 15:07 custom_ls.c
--rw-rw-r--   1 user     user        6077 Apr 11 15:07 shell.c
 ```
 
 ## Command Reference
@@ -90,8 +95,6 @@ custom_cat [OPTIONS] [FILE...]
 |----------|-------------|
 | `FILE...` | One or more files to concatenate. If omitted, reads from stdin |
 
----
-
 ### custom_cp — Copy files with overwrite prompt
 
 ```
@@ -104,19 +107,14 @@ custom_cp <source> <destination>
 - If the destination file already exists, prompts the user to confirm overwrite (`y`/`n`).
 - Prints a success message on completion or an error message if the source cannot be opened or the destination cannot be created.
 
----
-
 ### custom_wc — Word, line, and character count
 ```
 custom_wc <filename>
 ```
-**Behavior**
+**Behavior:**
 - Analyzes the specified file to calculate the total number of lines, words, and characters.
-
 - Utilizes state-tracking logic to identify word boundaries by detecting transitions from whitespace to non-whitespace characters.
-
 - Outputs the final results in a single line formatted as: lines words characters filename.
-
 - Includes error handling to notify the user if the filename argument is missing or if the target file cannot be opened.
 
 
@@ -151,30 +149,6 @@ custom_grep [OPTIONS] PATTERN [FILE...]
 | `0`  | At least one match was found |
 | `1`  | No matches found, or an error occurred (e.g. unknown option, file not found) |
 
-**Examples:**
-
-```bash
-# Basic search
-custom_grep "hello" file.txt
-
-# Case-insensitive search with line numbers
-custom_grep -in "error" app.log
-
-# Show lines that do NOT contain "debug"
-custom_grep -v "debug" app.log
-
-# Count matches across multiple files
-custom_grep -c "TODO" src/*.c
-
-# Search stdin via pipe
-cat file.txt | custom_grep "pattern"
-
-# Combine with input redirection in the shell
-custom_grep "pattern" < input.txt
-```
-
----
-
 ### custom_rm — Remove files and directories
 
 ```
@@ -205,36 +179,6 @@ custom_rm [OPTIONS] <path>...
 | `0`  | All specified paths were successfully removed (or silently skipped with `-f`) |
 | `1`  | One or more paths could not be removed (permission denied, path in use, etc.) |
 
-**Examples:**
-
-```bash
-# Remove a single file
-custom_rm file.txt
-
-# Remove multiple files
-custom_rm file1.txt file2.txt
-
-# Remove a directory recursively
-custom_rm -r mydir/
-
-# Force-remove (no error if file doesn't exist)
-custom_rm -f nonexistent.txt
-
-# Recursive + force (typical for cleaning up directories)
-custom_rm -rf build/
-
-# Use inside the shell
-custom_rm -r temp_folder/
-```
-
-**Notes:**
-
-- `custom_rm` will refuse to remove a directory without the `-r` flag and prints a descriptive error.
-- Hidden files and subdirectories are included in recursive removal.
-- Symlinks are removed as files (the link itself is deleted, not the target).
-
----
-
 ## Shell Features
 
 The interactive shell (`myshell`) supports running all custom utilities as built-in commands, as well as any external program available on the system.
@@ -264,9 +208,13 @@ The interactive shell (`myshell`) supports running all custom utilities as built
 | `help` | Show available commands |
 | `exit` / `quit` | Exit the shell |
 
-**Notes:**
 
+## Notes
+
+- Hidden files and subdirectories are included in recursive removal.
+- Symlinks are removed as files (the link itself is deleted, not the target).
 - Input redirection is supported by the shell, but `custom_ls` does not normally consume stdin.
 - If multiple directory arguments are passed to `custom_ls`, the last non-option argument is used.
 - `custom_grep` fully supports both input redirection and pipe input from the shell.
 - `custom_rm -rf` inside the shell runs in a forked child process, keeping the shell itself safe.
+- `custom_rm` will refuse to remove a directory without the `-r` flag and prints a descriptive error.

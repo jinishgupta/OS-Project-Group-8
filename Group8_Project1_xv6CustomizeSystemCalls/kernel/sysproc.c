@@ -284,6 +284,35 @@ sys_getprocinfo(void)
 }
 
 uint64
+sys_getppid(void)
+{
+  struct proc *p = myproc();
+  return p->parent ? p->parent->pid : 0;
+}
+
+uint64
+sys_yield(void)
+{
+  yield();
+  return 0;
+}
+
+uint64
+sys_getfreeprocs(void)
+{
+  struct proc *p;
+  extern struct proc proc[NPROC];
+  int count = 0;
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);
+    if(p->state == UNUSED)
+      count++;
+    release(&p->lock);
+  }
+  return count;
+}
+
+uint64
 sys_clone(void)
 {
   // Basic thread-like clone: for now, just fork (no shared memory)
