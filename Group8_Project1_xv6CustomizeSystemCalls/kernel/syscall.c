@@ -114,14 +114,12 @@ extern uint64 sys_getfreeprocs(void);
 extern uint64 sys_signal_init(void);
 extern uint64 sys_signal_send(void);
 extern uint64 sys_signal_handle(void);
-extern uint64 sys_getproccount(void);
-extern uint64 sys_sendmsg(void);
-extern uint64 sys_createlock(void);
-extern uint64 sys_threadcreate(void);
-extern uint64 sys_sendsignal(void);
 extern uint64 sys_shmget(void);
 extern uint64 sys_shmat(void);
 extern uint64 sys_shmdt(void);
+extern uint64 sys_thread_create(void);
+extern uint64 sys_tjoin(void);
+extern uint64 sys_texit(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -165,14 +163,12 @@ static uint64 (*syscalls[])(void) = {
 [SYS_mutex_lock] sys_mutex_lock,
 [SYS_mutex_unlock] sys_mutex_unlock,
 [SYS_sigmask] sys_sigmask,
-[SYS_getproccount] sys_getproccount,
-[SYS_sendmsg]      sys_sendmsg,
-[SYS_createlock]   sys_createlock,
-[SYS_threadcreate] sys_threadcreate,
-[SYS_sendsignal]   sys_sendsignal,
 [SYS_shmget]       sys_shmget,
 [SYS_shmat]        sys_shmat,
 [SYS_shmdt]        sys_shmdt,
+[SYS_thread_create] sys_thread_create,
+[SYS_tjoin]         sys_tjoin,
+[SYS_texit]         sys_texit,
 };
 
 void

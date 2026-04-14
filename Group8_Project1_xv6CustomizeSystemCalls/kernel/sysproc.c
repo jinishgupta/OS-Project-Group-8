@@ -360,29 +360,31 @@ sys_sigmask(void)
   }
   return 0;
 }
-uint64 sys_getproccount(void) {
-  printf("Kernel: Executing getproccount (Process feature)...\n");
-  return 1; 
+// ===========================================================
+// Thread System Calls
+// ===========================================================
+uint64 sys_thread_create(void) {
+  printf("Kernel: Executing thread_create...\n");
+  // The actual heavy lifting (similar to fork, but sharing vm) goes here.
+  // Usually involves calling a custom clone() function in proc.c
+  return 1; // Return dummy thread ID
 }
 
-uint64 sys_sendmsg(void) {
-  printf("Kernel: Executing sendmsg (IPC feature)...\n");
-  return 1; 
+uint64 sys_tjoin(void) {
+  int target_tid;
+  
+  // Grab the thread ID passed from user space
+  argint(0, &target_tid);
+  
+  printf("Kernel: Executing tjoin to wait for thread %d...\n", target_tid);
+  // Logic to put the calling thread to sleep until target_tid terminates
+  return 0; 
 }
 
-uint64 sys_createlock(void) {
-  printf("Kernel: Executing createlock (Lock feature)...\n");
-  return 1; 
-}
-
-uint64 sys_threadcreate(void) {
-  printf("Kernel: Executing threadcreate (Thread feature)...\n");
-  return 1; 
-}
-
-uint64 sys_sendsignal(void) {
-  printf("Kernel: Executing sendsignal (Signal feature)...\n");
-  return 1; 
+uint64 sys_texit(void) {
+  printf("Kernel: Executing texit...\n");
+  // Logic to clean up the specific thread's stack without killing the whole process
+  return 0; 
 }
 
 // ============================================================
