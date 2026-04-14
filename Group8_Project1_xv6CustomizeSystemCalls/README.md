@@ -17,11 +17,6 @@
 | 11 | `mutex_lock()` | Synchronization | 34 |
 | 12 | `mutex_unlock()` | Synchronization | 35 |
 | 13 | `sigmask()` | Signals | 36 |
-| 14 | `getproccount()` | Process Info | 37 |
-| 15 | `sendmsg()` | IPC | 38 |
-| 16 | `createlock()` | Synchronization | 39 |
-| 17 | `threadcreate()` | Threads | 40 |
-| 18 | `sendsignal()` | Signals | 41 |
 | 19 | `shmget()` | Shared Memory | 42 |
 | 20 | `shmat()` | Shared Memory | 43 |
 | 21 | `shmdt()` | Shared Memory | 44 |
@@ -293,29 +288,6 @@ PASS: SIGUSR1 ignored
 [dispatch] PID 5: default action for signal 1 — killing
 PASS: child was killed by default handler
 ```
-### Expected project1.c demo
-```
---- Starting Project 1 Demonstrations ---
-
-1. Testing Process Feature:
-Kernel: Executing getproccount (Process feature)...
-
-2. Testing IPC Feature:
-Kernel: Executing sendmsg (IPC feature)...
-
-3. Testing Lock Feature:
-Kernel: Executing createlock (Lock feature)...
-
-4. Testing Thread Feature:
-Kernel: Executing threadcreate (Thread feature)...
-
-5. Testing Signal Feature:
-Kernel: Executing sendsignal (Signal feature)...
-
---- Demonstrations Complete ---
-```
-
-
 
 
 ## Design Notes
